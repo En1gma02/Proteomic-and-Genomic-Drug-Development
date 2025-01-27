@@ -80,7 +80,7 @@ def nucleotide_transformer_app(input_sequence):
 custom_css = """
 .gradio-container {
     background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
-    background-image: url('https://news.fullerton.edu/app/uploads/2020/11/DNA-800x500.jpg'), 
+    background-image: url('https://static.vecteezy.com/system/resources/thumbnails/041/390/424/small_2x/ai-generated-colorful-dna-strand-in-abstract-space-photo.jpg'), 
                      linear-gradient(135deg, rgba(26, 42, 108, 0.95) 0%, 
                                            rgba(178, 31, 31, 0.95) 50%, 
                                            rgba(253, 187, 45, 0.95) 100%);
@@ -132,16 +132,22 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft(primary_hue="green", seconda
     """
     )
     
-    with gr.Row():
-        with gr.Column(scale=2):
-            input_text = gr.Textbox(
-                lines=5, 
-                placeholder="Enter DNA sequence here...",
-                label="Input DNA Sequence"
-            )
-        with gr.Column(scale=1):
-            submit_btn = gr.Button("Analyze", variant="primary")
+    # with gr.Row():
+    #     with gr.Column(scale=2):
+    #         input_text = gr.Textbox(
+    #             lines=5, 
+    #             placeholder="Enter DNA sequence here...",
+    #             label="Input DNA Sequence"
+    #         )
+    #     with gr.Column(scale=1):
+    #         submit_btn = gr.Button("Analyze", variant="primary")
     
+    input_text = gr.Textbox(
+                lines=5, 
+                 placeholder="Enter DNA sequence here...",
+                 label="Input DNA Sequence"
+             )
+    submit_btn = gr.Button("Analyze", variant="primary")
     output_text = gr.Textbox(label="Analysis Results", lines=10)
     
     examples = gr.Examples(

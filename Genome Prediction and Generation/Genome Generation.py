@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 
 # Load pre-trained GENA-LM model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained('AIRI-Institute/gena-lm-bert-base')
+tokenizer = AutoTokenizer.from_pretrained('x')
 model = AutoModel.from_pretrained('AIRI-Institute/gena-lm-bert-base', trust_remote_code=True)
 
 # Functions for each feature
