@@ -45,7 +45,7 @@ def generate_sequence(model, index_to_token, max_length=100, start_token='M'):
     return ''.join(sequence)
 
 if __name__ == '__main__':
-    data = pd.read_csv('E:/Hackathons/IIT BHU/Protien Sequencing/preprocessed_encoded_vectorized.csv')
+    data = pd.read_csv('RNN Protein Generation- Approach 1\Datasets\preprocessed_encoded_vectorized.csv')
     all_amino_acids = set(''.join(data['sequence']))
     token_to_index = {token: idx for idx, token in enumerate(sorted(all_amino_acids))}
     index_to_token = {idx: token for token, idx in token_to_index.items()}
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     output_size = len(token_to_index)
 
     model = RNNModel(input_size, hidden_size, output_size)
-    model.load_state_dict(torch.load('trained_model.pth'))
+    model.load_state_dict(torch.load('RNN Protein Generation- Approach 1/Models/trained_model.pth'))
 
     num_sequences = 10
     for _ in range(num_sequences):
