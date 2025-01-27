@@ -88,3 +88,10 @@
 2025-01-25 05:00:33,538 - INFO - HTTP Request: GET http://127.0.0.1:7861/gradio_api/startup-events "HTTP/1.1 200 OK"
 2025-01-25 05:00:33,558 - INFO - HTTP Request: HEAD http://127.0.0.1:7861/ "HTTP/1.1 200 OK"
 2025-01-25 05:00:34,356 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-28 03:27:53,541 - INFO - Loading model and tokenizer: alimotahharynia/DrugGen
+2025-01-28 03:29:59,658 - INFO - Dataset loaded and processed successfully.
+2025-01-28 03:30:01,353 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-28 03:30:01,760 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-28 03:30:01,958 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-28 03:33:32,459 - INFO - Generating SMILES for sequence: STAGKVIKCK...
+2025-01-28 03:36:20,256 - INFO - Small molecules generation completed. Generated 36 Small molecules.
