@@ -5,7 +5,7 @@ import numpy as np
 
 # Load models and tokenizers
 gena_tokenizer = AutoTokenizer.from_pretrained('AIRI-Institute/gena-lm-bert-base')
-gena_model = AutoModel.from_pretrained('AIRI-Institute/gena-lm-bert-base', trust_remote_code=True)
+gena_model = AutoModelForMaskedLM.from_pretrained('AIRI-Institute/gena-lm-bert-base', trust_remote_code=True)
 
 nucleotide_tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 nucleotide_model = AutoModelForMaskedLM.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
@@ -15,15 +15,17 @@ def dna_sequence_completion(sequence):
     inputs = gena_tokenizer(sequence, return_tensors='pt', truncation=True, max_length=512)
     inputs['input_ids'][0, len(sequence)//2:] = gena_tokenizer.mask_token_id
     outputs = gena_model(**inputs)
-    logits = outputs.last_hidden_state[:, len(sequence)//2:, :]
+    logits = outputs.logits[:, len(sequence)//2:, :]
     predicted_ids = torch.argmax(logits, dim=-1)
     completed_sequence = gena_tokenizer.decode(predicted_ids[0], skip_special_tokens=True)
     explanation = "✨ This is the completed DNA sequence based on the input. The model predicts likely nucleotides to fill in missing parts."
     return completed_sequence, explanation
 
 def sequence_similarity(seq1, seq2):
-    embedding1 = gena_model(**gena_tokenizer(seq1, return_tensors='pt')).last_hidden_state.mean(dim=1)
-    embedding2 = gena_model(**gena_tokenizer(seq2, return_tensors='pt')).last_hidden_state.mean(dim=1)
+    outputs1 = gena_model(**gena_tokenizer(seq1, return_tensors='pt'))
+    outputs2 = gena_model(**gena_tokenizer(seq2, return_tensors='pt'))
+    embedding1 = outputs1.logits.mean(dim=1)
+    embedding2 = outputs2.logits.mean(dim=1)
     similarity_score = torch.cosine_similarity(embedding1, embedding2).item()
     explanation = f"🔍 Similarity score: {similarity_score:.2f}\nA score closer to 1.0 indicates higher similarity between sequences."
     return similarity_score, explanation
@@ -33,8 +35,10 @@ def mutation_impact_analysis(sequence, mutation):
         index, new_nucleotide = mutation.split(',')
         index = int(index)
         mutated_sequence = sequence[:index] + new_nucleotide + sequence[index+1:]
-        original_embedding = gena_model(**gena_tokenizer(sequence, return_tensors='pt')).last_hidden_state.mean(dim=1)
-        mutated_embedding = gena_model(**gena_tokenizer(mutated_sequence, return_tensors='pt')).last_hidden_state.mean(dim=1)
+        original_outputs = gena_model(**gena_tokenizer(sequence, return_tensors='pt'))
+        mutated_outputs = gena_model(**gena_tokenizer(mutated_sequence, return_tensors='pt'))
+        original_embedding = original_outputs.logits.mean(dim=1)
+        mutated_embedding = mutated_outputs.logits.mean(dim=1)
         impact_score = torch.cosine_similarity(original_embedding, mutated_embedding).item()
         return mutated_sequence, impact_score, f"🧬 Impact Score: {impact_score:.2f}\nLower scores indicate more significant changes."
     except:
@@ -45,8 +49,8 @@ def dna_sequence_classification(sequence):
     """
     Classifies DNA sequence into categories (e.g., coding vs. non-coding).
     """
-    # Using GENA model for better classification
-    embedding = gena_model(**gena_tokenizer(sequence, return_tensors='pt')).last_hidden_state.mean(dim=1)
+    outputs = gena_model(**gena_tokenizer(sequence, return_tensors='pt'))
+    embedding = outputs.logits.mean(dim=1)
     
     # Simple classification logic based on sequence patterns and embeddings
     has_start_codon = "ATG" in sequence
@@ -230,4 +234,5 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
         """
     )
 
-demo.launch()
+if __name__ == '__main__':
+    demo.launch()
